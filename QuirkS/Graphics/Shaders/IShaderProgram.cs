@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace Quirk.Graphics.Shaders
 {
-    interface IShader
+    interface IShaderProgram
     {
-        QuirkShaderType GetShaderType();
+        void Link();
+        void Unlink();
+
+        void Attach(IShader Shader);
+        void Detach(IShader Shader);
 
         int GetReference();
+
         void Destroy();
     }
 }

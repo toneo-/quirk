@@ -27,6 +27,11 @@ namespace Quirk.Graphics.LibOpenTK
             GL.BindVertexArray(0);
         }
 
+        public int GetReference()
+        {
+            return Reference;
+        }
+
         /// <summary>
         /// Immediately deletes and invalidates this VAO.
         /// </summary>

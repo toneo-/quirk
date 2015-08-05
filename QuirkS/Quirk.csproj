@@ -53,6 +53,8 @@
     <Compile Include="Graphics\IIndexBuffer.cs" />
     <Compile Include="Graphics\IVertexArrayObject.cs" />
     <Compile Include="Graphics\IVertexBuffer.cs" />
+    <Compile Include="Graphics\Shaders\IShaderProgram.cs" />
+    <Compile Include="Graphics\Shaders\LibOpenTK\ShaderProgram.cs" />
     <Compile Include="Graphics\Shaders\LibOpenTK\FragmentShader.cs" />
     <Compile Include="Graphics\Shaders\LibOpenTK\VertexShader.cs" />
     <Compile Include="Graphics\Shaders\IShader.cs" />
@@ -70,6 +72,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Resources\Shaders\null_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Shaders\null_frag.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

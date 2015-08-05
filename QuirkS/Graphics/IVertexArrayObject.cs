@@ -10,6 +10,8 @@ namespace Quirk.Graphics
     {
         void Bind();
         void Unbind();
+
+        int GetReference();
         void Destroy();
     }
 }

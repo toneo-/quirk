@@ -60,6 +60,8 @@ namespace Quirk
 
         static bool first = true;
         static IVertexArrayObject vao;
+        static IShader fragSh, vertexSh;
+        
         static void window_RenderFrame(object sender, FrameEventArgs e)
         {
             GameWindow g = (GameWindow)sender;
@@ -85,16 +87,27 @@ namespace Quirk
                 GL.DisableClientState(ArrayCap.VertexArray);
                 GL.DisableClientState(ArrayCap.ColorArray);
 
-                //IShader sh = new FragmentShader(@"hue gaiuys");
+                vertexSh = new FragmentShader(File.ReadAllText("Resources/Shaders/null_vertex.glsl"));
+                fragSh = new FragmentShader(File.ReadAllText("Resources/Shaders/null_frag.glsl"));
             }
 
             ActiveRenderer.Clear(Color.CornflowerBlue);
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
+            //GL.Translate(new Vector3(0.0f, 0.0f, -1.0f));
+            //GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
+            //GL.Frustum(-1.0, 1.0, -1.0, 1.0, 0.0, 400.0);
+            Matrix4 persp = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)(16/9), 1, 64);
+                //OpenTK.Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)aspect_ratio, 1, 64);
+            GL.LoadMatrix(ref persp);
 
             vao.Bind();
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            
+            Matrix4 lookat = Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 1, 0);
+            GL.LoadMatrix(ref lookat);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
 
