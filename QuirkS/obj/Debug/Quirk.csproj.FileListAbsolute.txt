@@ -1,0 +1,9 @@
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\bin\Debug\OpenTK.dll
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\bin\Debug\OpenTK.pdb
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\bin\Debug\OpenTK.xml
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\obj\Debug\Quirk.csprojResolveAssemblyReference.cache
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\bin\Debug\Quirk.exe.config
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\bin\Debug\Quirk.exe
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\bin\Debug\Quirk.pdb
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\obj\Debug\Quirk.exe
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\obj\Debug\Quirk.pdb
