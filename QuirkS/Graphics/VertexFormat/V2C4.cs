@@ -29,6 +29,26 @@ namespace Quirk.Graphics.VertexFormat
             // 2-float position, 4-float color
             return sizeof(float) * (2 + 4);
         }
+
+        public int GetColorComponents()
+        {
+            return sizeof(float) * 4;
+        }
+
+        public int GetVertexComponents()
+        {
+            return sizeof(float) * 2;
+        }
+
+        public Type GetColorType()
+        {
+            return typeof(float);
+        }
+
+        public Type GetVectorType()
+        {
+            return typeof(float);
+        }
     }
 
     /*

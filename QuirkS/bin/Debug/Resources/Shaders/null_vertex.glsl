@@ -2,12 +2,12 @@
 // Null shader - Vertices pass straight through.
 
 uniform Transformation {
-	mat4 projection_matrix;
-	mat4 modelview_matrix;
+	mat4 Projection;
+	mat4 ModelView;
 };
 
 in vec3 vertex;
 
 void main(void) {
-	gl_Position = projection_matrix * modelview_matrix * vec4(vertex, 1.0);
+	gl_Position = Projection * ModelView * vec4(vertex, 1.0);
 }

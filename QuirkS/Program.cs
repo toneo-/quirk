@@ -61,7 +61,8 @@ namespace Quirk
         static bool first = true;
         static IVertexArrayObject vao;
         static IShader fragSh, vertexSh;
-        
+        static IShaderProgram shProg;
+
         static void window_RenderFrame(object sender, FrameEventArgs e)
         {
             GameWindow g = (GameWindow)sender;
@@ -87,8 +88,12 @@ namespace Quirk
                 GL.DisableClientState(ArrayCap.VertexArray);
                 GL.DisableClientState(ArrayCap.ColorArray);
 
-                vertexSh = new FragmentShader(File.ReadAllText("Resources/Shaders/null_vertex.glsl"));
+                vertexSh = new VertexShader(File.ReadAllText("Resources/Shaders/Test/test_V2C4.glsl"));
                 fragSh = new FragmentShader(File.ReadAllText("Resources/Shaders/null_frag.glsl"));
+
+                shProg = new ShaderProgram();
+                shProg.Attach(vertexSh);
+                shProg.Attach(fragSh);
             }
 
             ActiveRenderer.Clear(Color.CornflowerBlue);
@@ -104,6 +109,7 @@ namespace Quirk
 
             vao.Bind();
 
+            
             GL.MatrixMode(MatrixMode.Modelview);
             
             Matrix4 lookat = Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 1, 0);

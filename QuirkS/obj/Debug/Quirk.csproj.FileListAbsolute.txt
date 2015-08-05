@@ -9,3 +9,4 @@ C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\obj\Debug\Quirk.exe
 C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\obj\Debug\Quirk.pdb
 C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\bin\Debug\Resources\Shaders\null_vertex.glsl
 C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\bin\Debug\Resources\Shaders\null_frag.glsl
+C:\Users\Toneo\Projects\C#\QuirkS\QuirkS\bin\Debug\Resources\Shaders\Test\test_V2C4.glsl
