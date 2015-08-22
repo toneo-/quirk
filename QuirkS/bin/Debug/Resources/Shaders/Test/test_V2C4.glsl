@@ -1,14 +1,13 @@
 ﻿#version 140
 
-uniform Transformation {
-	mat4 Projection;
-	mat4 ModelView;
-};
+uniform mat4 Projection;
+uniform mat4 ModelView;
 
-in vec2 vertex;
+in vec2 inPosition;
 in vec4 inColor;
-out vec4 outColor;
+out vec4 fragColor;
 
 void main(void) {
-	gl_Position = Projection * ModelView * vec4(vertex, 0.0, 1.0);
+	gl_Position = Projection * ModelView * vec4(inPosition, 0.0, 1.0);
+	fragColor = inColor;
 }

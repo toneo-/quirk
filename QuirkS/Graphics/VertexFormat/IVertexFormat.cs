@@ -8,12 +8,6 @@ namespace Quirk.Graphics.VertexFormat
 {
     interface IVertexFormat
     {
-        int GetStride();
-
-        public int GetColorComponents();
-        public int GetVertexComponents();
-
-        public Type GetColorType();
-        public Type GetVertexType();
+        
     }
 }

@@ -26,6 +26,7 @@ namespace Quirk
 
         static void Main(string[] args)
         {
+
             using (var window = new GameWindow())
             {
                 window.Load += window_Load;
@@ -71,51 +72,73 @@ namespace Quirk
             {
                 first = false;
 
-                vao = new VertexArrayObject();
-                vao.Bind();
-
-                GL.EnableClientState(ArrayCap.VertexArray);
-                GL.EnableClientState(ArrayCap.ColorArray);
-
-                iBuffer.Bind();
-                vBuffer.Bind();
-
-                GL.VertexPointer(2, VertexPointerType.Float, 2 * sizeof(float) + 4 * sizeof(float), IntPtr.Zero);
-                GL.ColorPointer(4, ColorPointerType.Float, 2 * sizeof(float) + 4 * sizeof(float), (IntPtr)(2 * sizeof(float)));
-                
-                vao.Unbind();
-
-                GL.DisableClientState(ArrayCap.VertexArray);
-                GL.DisableClientState(ArrayCap.ColorArray);
-
                 vertexSh = new VertexShader(File.ReadAllText("Resources/Shaders/Test/test_V2C4.glsl"));
                 fragSh = new FragmentShader(File.ReadAllText("Resources/Shaders/null_frag.glsl"));
 
                 shProg = new ShaderProgram();
                 shProg.Attach(vertexSh);
                 shProg.Attach(fragSh);
+
+                vao = new VertexArrayObject();
+                //vao.Bind();
+
+                GL.EnableClientState(ArrayCap.VertexArray);
+                GL.EnableClientState(ArrayCap.ColorArray);
+
+                //iBuffer.Bind();
+                //vBuffer.Bind();
+
+                //GL.VertexPointer(2, VertexPointerType.Float, 2 * sizeof(float) + 4 * sizeof(float), IntPtr.Zero);
+                //GL.ColorPointer(4, ColorPointerType.Float, 2 * sizeof(float) + 4 * sizeof(float), (IntPtr)(2 * sizeof(float)));
+
+                //shProg.Use();
+
+                //vao.Unbind();
+
+                //GL.DisableClientState(ArrayCap.VertexArray);
+                //GL.DisableClientState(ArrayCap.ColorArray);
             }
 
             ActiveRenderer.Clear(Color.CornflowerBlue);
 
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
+            //GL.MatrixMode(MatrixMode.Projection);
+           // GL.LoadIdentity();
             //GL.Translate(new Vector3(0.0f, 0.0f, -1.0f));
             //GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
             //GL.Frustum(-1.0, 1.0, -1.0, 1.0, 0.0, 400.0);
-            Matrix4 persp = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)(16/9), 1, 64);
                 //OpenTK.Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)aspect_ratio, 1, 64);
-            GL.LoadMatrix(ref persp);
+            //GL.LoadMatrix(ref persp);
 
-            vao.Bind();
+            //vao.Bind();
 
-            
-            GL.MatrixMode(MatrixMode.Modelview);
-            
+            /* Problem: Stuff isn't drawing properly
+             * V2C4 is not at fault, is genuinely 24 bytes
+             * VAO appears to have not been binding the buffers, so can now draw points
+             * Points appear to be at 0,0?
+             */
+
+            GL.EnableClientState(ArrayCap.VertexArray);
+            GL.EnableClientState(ArrayCap.ColorArray);
+
+            // Problem's probably here VVVVV
+            shProg.SetupFormat(typeof(V2C4));
+            shProg.Use();
+
+            // Something wrong with the VAO?
+            iBuffer.Bind();
+            vBuffer.Bind();
+
+            Matrix4 persp = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)(16 / 9), 1, 64);
+            shProg.SetUniform("Projection", ref persp);
+
             Matrix4 lookat = Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 1, 0);
-            GL.LoadMatrix(ref lookat);
+            shProg.SetUniform("ModelView", ref lookat);
 
+            GL.PointSize(5.0f);
+
+            // Something's wrong! ***************
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+            GL.DrawArrays(PrimitiveType.Points, 0, 3);
 
             g.SwapBuffers();
         }

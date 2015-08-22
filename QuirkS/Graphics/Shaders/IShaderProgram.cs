@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using OpenTK; // Vector2
 using Quirk.Graphics.VertexFormat;
 
 namespace Quirk.Graphics.Shaders
@@ -12,13 +13,20 @@ namespace Quirk.Graphics.Shaders
     {
         void Link();
         void Unlink();
+        void Use();
 
         void Attach(IShader Shader);
         void Detach(IShader Shader);
 
-        void SetupFormat(IVertexFormat VertexFormat);
-        int GetReference();
+        void SetupFormat(Type VertexFormat);
 
+        void SetUniform(string Name, ref Vector2 Value);
+        void SetUniform(string Name, ref Matrix4 Value);
+
+        // NB: Add extra SetUniforms
+        //     And maybe GetUniforms
+
+        int GetReference();
         void Destroy();
     }
 }

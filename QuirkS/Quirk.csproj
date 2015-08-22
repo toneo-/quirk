@@ -69,6 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\IRenderer.cs" />
     <Compile Include="Graphics\LibOpenTK\RendererTK.cs" />
+    <Compile Include="ShaderLinkAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
