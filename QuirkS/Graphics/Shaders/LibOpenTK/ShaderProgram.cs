@@ -203,6 +203,10 @@ namespace Quirk.Graphics.Shaders.LibOpenTK
 
             // Tell OpenGL where this variable is within vertex array data
             GL.VertexAttribPointer(variableIndex, ShaderLink.ComponentCount, pointerType, ShaderLink.Normalised, Stride, Offset);
+            GL.EnableVertexAttribArray(variableIndex);
+
+            Console.WriteLine("Shader Link: {0}, {1} x {2}, offset {3}, size {4}, overall stride {5}",
+                linkedName, componentCount, pointerType.ToString(), Offset, (ShaderLink.ComponentCount * ShaderLink.ComponentSize), Stride);
         }
     }
 }

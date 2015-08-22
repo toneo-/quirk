@@ -20,6 +20,10 @@ namespace Quirk.Graphics.LibOpenTK
         public void Bind()
         {
             GL.BindVertexArray(Reference);
+
+            ErrorCode error = GL.GetError();
+            if (error != ErrorCode.NoError)
+                throw new QuirkGraphicsException("Unable to bind VertexArrayObject: " + error.ToString());
         }
 
         public void Unbind()
