@@ -26,25 +26,24 @@ namespace Quirk
 
         static void Main(string[] args)
         {
-
-            using (var window = new GameWindow())
+            using (var window = new GameWindow(800, 600))
             {
                 window.Load += window_Load;
                 window.Resize += window_Resize;
                 window.UpdateFrame += window_UpdateFrame;
                 window.RenderFrame += window_RenderFrame;
 
-                V2C4[] vboData = {
-                    new V2C4(new Vector2(-1.0f, 1.0f), Color.Red),
-                    new V2C4(new Vector2(0.0f, -1.0f), Color.Green),
-                    new V2C4(new Vector2(1.0f, 1.0f), Color.Blue),
+                V3C4[] vboData = {
+                    new V3C4(new Vector3(-0.8f, 0.0f,-0.8f), Color.Red),
+                    new V3C4(new Vector3(0.8f, 0.0f, -0.8f), Color.Green),
+                    new V3C4(new Vector3(0.0f, 0.0f, 0.8f), Color.Blue),
                 };
 
                 int[] iboData = {
                     0, 1, 2
                 };
 
-                vBuffer = new VertexBuffer<V2C4>(vboData);
+                vBuffer = new VertexBuffer<V3C4>(vboData);
                 iBuffer = new IndexBuffer<int>(iboData);
 
                 window.Closing += window_Closing;
@@ -63,6 +62,8 @@ namespace Quirk
         static IVertexArrayObject vao;
         static IShader fragSh, vertexSh;
         static IShaderProgram shProg;
+        static float shift1 = 0.0f;
+        static float shift2 = -5.0f;
 
         static void window_RenderFrame(object sender, FrameEventArgs e)
         {
@@ -72,7 +73,7 @@ namespace Quirk
             {
                 first = false;
 
-                vertexSh = new VertexShader(File.ReadAllText("Resources/Shaders/Test/test_V2C4.glsl"));
+                vertexSh = new VertexShader(File.ReadAllText("Resources/Shaders/Test/test_V3C4.glsl"));
                 fragSh = new FragmentShader(File.ReadAllText("Resources/Shaders/null_frag.glsl"));
 
                 shProg = new ShaderProgram();
@@ -85,7 +86,7 @@ namespace Quirk
                 iBuffer.Bind();
                 vBuffer.Bind();
 
-                shProg.SetupFormat(typeof(V2C4));
+                shProg.SetupFormat(typeof(V3C4));
                 shProg.Use();
 
                 vao.Unbind();
@@ -95,28 +96,31 @@ namespace Quirk
 
             vao.Bind();
 
-            Matrix4 persp = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)(16 / 9), 1, 64);
-            //shProg.SetUniform("Projection", ref persp);
+            Camera cam = new Camera();
+            cam.Position = new Vector3(shift1, shift2, 0);
+            cam.Angles = new Angle(0, 0, 0);
 
-            Matrix4 lookat = Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 1, 0);
-            //shProg.SetUniform("ModelView", ref lookat);
+            Matrix4 persp = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver2, (float)(16 / 9), 1, 64);
+            Matrix4 lookat = cam.PerspectiveMatrix;// Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 0, 1);
+            Matrix4 PMV = lookat * persp;
 
-            GL.PointSize(5.0f);
+            shProg.SetUniform("ProjectionModelView", ref PMV);
+
+            GL.PointSize(15.0f);
 
             // Something's wrong! ***************
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
             GL.DrawArrays(PrimitiveType.Points, 0, 3);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
 
             vao.Unbind();
 
+            GL.Flush();
             g.SwapBuffers();
         }
 
         static void window_Load(object sender, EventArgs e)
         {
             GameWindow g = (GameWindow)sender;
-
-            g.VSync = VSyncMode.On;
         }
 
         static void window_Resize(object sender, EventArgs e)
@@ -133,6 +137,17 @@ namespace Quirk
             if (g.Keyboard[Key.Enter])
                 g.Exit();
 
+            if (g.Keyboard[Key.Left])
+                shift1 -= 0.1f;
+
+            if (g.Keyboard[Key.Right])
+                shift1 += 0.1f;
+
+            if (g.Keyboard[Key.Up])
+                shift2 += 0.1f;
+
+            if (g.Keyboard[Key.Down])
+                shift2 -= 0.1f;
         }
     }
 }

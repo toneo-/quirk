@@ -47,7 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\Angle.cs" />
     <Compile Include="Graphics\BufferUsage.cs" />
+    <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\QuirkShaderCompilationException.cs" />
     <Compile Include="Graphics\IGenericBuffer.cs" />
     <Compile Include="Graphics\IIndexBuffer.cs" />
@@ -59,6 +61,7 @@
     <Compile Include="Graphics\Shaders\LibOpenTK\VertexShader.cs" />
     <Compile Include="Graphics\Shaders\IShader.cs" />
     <Compile Include="Graphics\Shaders\QuirkShaderType.cs" />
+    <Compile Include="Graphics\VertexFormat\V3C4.cs" />
     <Compile Include="Graphics\VertexFormat\IVertexFormat.cs" />
     <Compile Include="Graphics\LibOpenTK\IndexBuffer.cs" />
     <Compile Include="Graphics\LibOpenTK\VertexBuffer.cs" />
@@ -80,6 +83,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Shaders\null_frag.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Shaders\Test\test_V3C4.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
