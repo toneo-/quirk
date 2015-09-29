@@ -20,7 +20,7 @@ namespace Quirk.Graphics.Shaders
 
         void SetupFormat(Type VertexFormat);
 
-        void BindUniformBlock(string Name, int BindingIndex);
+        void BindUniformBlock<T>(string Name, IUniformBuffer<T> UBO) where T : struct;
 
         void SetUniform(string Name, int Value);
         void SetUniform(string Name, float Value);

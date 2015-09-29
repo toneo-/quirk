@@ -94,7 +94,7 @@ namespace Quirk
         static float shift1 = 0.0f;
         static float shift2 = -5.0f;
 
-        static IGenericBuffer ubo;
+        static IUniformBuffer<terribleLight> ubo;
 
         static Camera cam = new Camera();
 
@@ -148,7 +148,7 @@ namespace Quirk
 
                 shProg.SetupFormat(typeof(V3N3));
                 shProg.Use();
-                shProg.BindUniformBlock("BlockyBlock", 0);
+                shProg.BindUniformBlock("BlockyBlock", ubo);
 
                 vao.Unbind();
 
@@ -171,16 +171,20 @@ namespace Quirk
 
             // "DO YOU HAVE EPILEPSY?" mode
             //Random r = new Random();
-            //lights[0].Direction.X = (float)(r.NextDouble() * 1.0f);
-            //lights[0].Direction.Y = (float)(r.NextDouble() * 1.0f);
-            //lights[0].Direction.Z = (float)(r.NextDouble() * 1.0f);
-            //lights[0].Direction.Normalize();
+            //terribleLight t1 = new terribleLight();
+            //t1.Direction.X = (float)(r.NextDouble() * 1.0f);
+            //t1.Direction.Y = (float)(r.NextDouble() * 1.0f);
+            //t1.Direction.Z = (float)(r.NextDouble() * 1.0f);
+            //t1.Direction.Normalize();
 
-            //lights[0].Position.X = (float)(r.NextDouble() * 1.0f);
-            //lights[0].Position.Y = (float)(r.NextDouble() * 1.0f);
-            //lights[0].Position.Z = (float)(r.NextDouble() * 1.0f);
-            //lights[0].Position = (lights[0].Position.Normalized() * 20.0f);
-            //((UniformBuffer<terribleLight>)(ubo)).WriteData(lights);
+            //t1.Position.X = (float)(r.NextDouble() * 1.0f);
+            //t1.Position.Y = (float)(r.NextDouble() * 1.0f);
+            //t1.Position.Z = (float)(r.NextDouble() * 1.0f);
+            //t1.Position = (t1.Position.Normalized() * 20.0f);
+            //t1.Range = 150.0f;
+            //t1.Color = new Vector3(1.0f, 1.0f, 1.0f);
+
+            //ubo.WriteData(t1);
 
             shProg.SetUniform("LightCount", 5);
 

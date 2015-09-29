@@ -10,7 +10,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Quirk.Graphics.LibOpenTK
 {
-    public class VertexBuffer<T> : IGenericBuffer where T : struct
+    public class VertexBuffer<T> : IVertexBuffer<T> where T : struct
     {
         private int Reference = -1;
         private int BufferSize = -1;

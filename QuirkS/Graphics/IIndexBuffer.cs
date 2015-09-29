@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace Quirk.Graphics
 {
-    interface IIndexBuffer
+    interface IIndexBuffer<T> : IGenericBuffer where T : struct
     {
-        void Bind();
-        void Unbind();
-        void Destroy();
-        void WriteData(IntPtr Data, int Length);
-        //void WriteData(T[] iboData);
+        void WriteData(T[] Data);
     }
 }

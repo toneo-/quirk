@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Quirk.Graphics
 {
-    interface IVertexBuffer
+    interface IVertexBuffer<T> : IGenericBuffer where T : struct
     {
-        void Bind();
-        void Destroy();
-        void WriteData(IntPtr Data, int Size);
-        //void WriteData(T[] DataArray);
+        void WriteData(T[] Data);
     }
 }

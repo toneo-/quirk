@@ -10,10 +10,14 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Quirk.Graphics.LibOpenTK
 {
-    public class UniformBuffer<T> : IGenericBuffer where T : struct
+    public class UniformBuffer<T> : IUniformBuffer<T> where T : struct
     {
         private int Reference = -1;
         private int BufferSize = -1;
+
+        private int BindingIndex = -1;
+
+        private static int IncrementalBindingIndex = 0;
 
         /// <summary>
         /// Creates a UniformBuffer from the given data.
@@ -70,14 +74,18 @@ namespace Quirk.Graphics.LibOpenTK
 
         public void Bind()
         {
-            // TEMPORARY !!!
-            GL.BindBufferBase(BufferRangeTarget.UniformBuffer, 0, Reference);
+            GL.BindBufferBase(BufferRangeTarget.UniformBuffer, BindingIndex, Reference);
             GL.BindBuffer(BufferTarget.UniformBuffer, Reference);
         }
 
         public void Unbind()
         {
             GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+        }
+
+        public int GetBindingIndex()
+        {
+            return BindingIndex;
         }
 
         public void WriteData(IntPtr Data, int Size)
@@ -90,6 +98,23 @@ namespace Quirk.Graphics.LibOpenTK
 
             // Load the data into the buffer
             GL.BufferSubData(BufferTarget.UniformBuffer, IntPtr.Zero, new IntPtr(Size), Data);
+        }
+
+        public void WriteData(T Data)
+        {
+            this.WriteData(Data, 0);
+        }
+
+        public void WriteData(T Data, int Offset)
+        {
+            int dataSize = Marshal.SizeOf(typeof(T));
+
+            // Sanity check
+            if (dataSize > this.BufferSize)
+                throw new QuirkGraphicsException("Data size exceeds buffer size!");
+
+            // Load the data into the buffer
+            GL.BufferSubData<T>(BufferTarget.UniformBuffer, new IntPtr(dataSize * Offset), new IntPtr(dataSize), ref Data);
         }
 
         public void WriteData(T[] Data)
@@ -110,6 +135,10 @@ namespace Quirk.Graphics.LibOpenTK
 
             if (GL.GetError() != ErrorCode.NoError)
                 throw new QuirkGraphicsException("Failed to generate UBO!");
+
+            // Todo: This should be validated, and controlled by the graphics context - rather than the UBO class itself.
+            BindingIndex = IncrementalBindingIndex;
+            IncrementalBindingIndex++;
         }
     }
 }
