@@ -42,20 +42,23 @@ namespace Quirk.Graphics
         /// </summary>
         public Matrix4 PerspectiveMatrix { get; private set; }
 
+        /// <summary>
+        /// Gets the World transformation matrix.
+        /// </summary>
+        public Matrix4 WorldMatrix { get; private set; }
+
         private void RecalculateMatrix()
         {
             float distance = 5000;
             Vector3 direction = Angles.Forward();
 
-            float bbb = direction.Length;
-
             Vector3 falseTarget = Position + (direction * distance);
 
-            Vector3 moddedUp = Vector3.TransformVector(Up, Matrix4.CreateRotationY(Angles.Roll));
+            // Rotate "up" vector by the camera's roll angle.
+            Vector3 rotatedUp = Vector3.TransformVector(Up, Matrix4.CreateRotationY(Angles.RollRads));
 
-            PerspectiveMatrix = Matrix4.LookAt(Position, falseTarget, moddedUp);
-
-            int y = 0;
+            PerspectiveMatrix = Matrix4.LookAt(Position, falseTarget, rotatedUp);
+            WorldMatrix = Matrix4.Translation(-Position);
         }
     }
 }

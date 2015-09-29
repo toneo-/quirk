@@ -20,7 +20,12 @@ namespace Quirk.Graphics.Shaders
 
         void SetupFormat(Type VertexFormat);
 
+        void BindUniformBlock(string Name, int BindingIndex);
+
+        void SetUniform(string Name, int Value);
+        void SetUniform(string Name, float Value);
         void SetUniform(string Name, ref Vector2 Value);
+        void SetUniform(string Name, ref Vector3 Value);
         void SetUniform(string Name, ref Matrix4 Value);
 
         // NB: Add extra SetUniforms

@@ -12,6 +12,6 @@ namespace Quirk.Graphics
         void Unbind();
         void Destroy();
         void WriteData(IntPtr Data, int Length);
-        //void WriteData(T[] Indices);
+        //void WriteData(T[] iboData);
     }
 }

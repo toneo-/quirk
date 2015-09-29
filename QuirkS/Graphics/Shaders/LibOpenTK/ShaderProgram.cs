@@ -84,10 +84,37 @@ namespace Quirk.Graphics.Shaders.LibOpenTK
             LinkedShaders.Remove(Shader);
         }
 
+        public void BindUniformBlock(string Name, int BindingIndex)
+        {
+            int Location = GL.GetUniformBlockIndex(Reference, Name);
+            GL.UniformBlockBinding(Reference, Location, BindingIndex);
+
+            // TODO: Maintain a list of block names and increment binding ID each time
+            // AND/OR allow user to pick an ID
+        }
+
+        public void SetUniform(string Name, int Value)
+        {
+            int Location = GetUniformLocation(Name);
+            GL.Uniform1(Location, Value);
+        }
+
+        public void SetUniform(string Name, float Value)
+        {
+            int Location = GetUniformLocation(Name);
+            GL.Uniform1(Location, Value);
+        }
+
         public void SetUniform(string Name, ref Vector2 Value)
         {
             int Location = GetUniformLocation(Name);
             GL.Uniform2(Location, ref Value);
+        }
+
+        public void SetUniform(string Name, ref Vector3 Value)
+        {
+            int Location = GetUniformLocation(Name);
+            GL.Uniform3(Location, ref Value);
         }
 
         public void SetUniform(string Name, ref Matrix4 Value)

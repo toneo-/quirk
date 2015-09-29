@@ -50,6 +50,10 @@
     <Compile Include="Graphics\Angle.cs" />
     <Compile Include="Graphics\BufferUsage.cs" />
     <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\IMesh.cs" />
+    <Compile Include="Graphics\LibOpenTK\UniformBuffer.cs" />
+    <Compile Include="Graphics\LibOpenTK\TriangleMesh.cs" />
+    <Compile Include="Graphics\Loaders\OBJLoader.cs" />
     <Compile Include="Graphics\QuirkShaderCompilationException.cs" />
     <Compile Include="Graphics\IGenericBuffer.cs" />
     <Compile Include="Graphics\IIndexBuffer.cs" />
@@ -61,6 +65,8 @@
     <Compile Include="Graphics\Shaders\LibOpenTK\VertexShader.cs" />
     <Compile Include="Graphics\Shaders\IShader.cs" />
     <Compile Include="Graphics\Shaders\QuirkShaderType.cs" />
+    <Compile Include="Graphics\VertexFormat\V3N3T2.cs" />
+    <Compile Include="Graphics\VertexFormat\V3N3.cs" />
     <Compile Include="Graphics\VertexFormat\V3C4.cs" />
     <Compile Include="Graphics\VertexFormat\IVertexFormat.cs" />
     <Compile Include="Graphics\LibOpenTK\IndexBuffer.cs" />
@@ -76,6 +82,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Resources\Shaders\Test\test_frag_V3N3.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Shaders\Test\test_vert_V3N3.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Shaders\Test\test_V2C4.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

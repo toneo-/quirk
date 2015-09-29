@@ -74,18 +74,22 @@ namespace Quirk.Graphics
         public Vector3 Forward()
         {
             Vector3 forwardVec = new Vector3(
-                    (float)(Math.Sin(-YawRads) * Math.Cos(PitchRads)),
-                    (float)(Math.Cos(-YawRads) * Math.Cos(PitchRads)),
+                    (float)(Math.Sin(YawRads) * Math.Cos(PitchRads)),
+                    (float)(Math.Cos(YawRads) * Math.Cos(PitchRads)),
                     (float)(Math.Sin(PitchRads))
                 );
 
             return forwardVec;
+        }
 
-            /*
-             * x = cos(yaw)*cos(pitch)
-y = sin(yaw)*cos(pitch)
-z = sin(pitch)
-             */
+        public Vector3 Right()
+        {
+            // Must be rotated by 90 degrees yaw (z-axis) and then 'pitched up' by however much roll the camera has.
+
+            Vector3 forwardVec = this.Forward();
+            Vector3 rightVec = Vector3.TransformVector(forwardVec, Matrix4.CreateRotationZ((float)(-90 * Deg2Rad)) * Matrix4.CreateRotationY(RollRads));
+
+            return rightVec;
         }
     }
 }
