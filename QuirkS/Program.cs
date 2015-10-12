@@ -138,7 +138,7 @@ namespace Quirk
                 lights[1].Color = new Vector3(1.0f, 0.5f, 0.0f);
                 lights[1].Range = 500.0f;
 
-                ubo = new UniformBuffer<terribleLight>(lights);
+                ubo = Context.CreateUniformBuffer<terribleLight>(lights); //new UniformBuffer<terribleLight>(lights);
 
              //Vector3 Direction = new Vector3(0, 0.0f, 1.0f);
             //Vector3 Position = new Vector3(0, 0.0f, -10.0f);
