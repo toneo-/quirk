@@ -30,6 +30,11 @@ namespace Quirk.Graphics
             Initialised = true;
         }
 
+        ~TriangleMesh()
+        {
+            this.Destroy();
+        }
+
         public void Bind()
         {
             if (!Initialised)

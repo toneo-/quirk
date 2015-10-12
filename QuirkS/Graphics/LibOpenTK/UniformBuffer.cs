@@ -17,15 +17,14 @@ namespace Quirk.Graphics.LibOpenTK
 
         private int BindingIndex = -1;
 
-        private static int IncrementalBindingIndex = 0;
-
         /// <summary>
         /// Creates a UniformBuffer from the given data.
         /// </summary>
         /// <param name="Data">The data</param>
-        public UniformBuffer(T Data)
+        public UniformBuffer(T Data, int BindingIndex)
         {
             this.GenerateBuffer();
+            this.BindingIndex = BindingIndex;
 
             // Work out size of buffer needed
             this.BufferSize = Marshal.SizeOf(typeof(T));
@@ -38,9 +37,10 @@ namespace Quirk.Graphics.LibOpenTK
         /// Creates a UniformBuffer from the given array of data.
         /// </summary>
         /// <param name="Data">The data</param>
-        public UniformBuffer(T[] Data)
+        public UniformBuffer(T[] Data, int BindingIndex)
         {
             this.GenerateBuffer();
+            this.BindingIndex = BindingIndex;
 
             // Work out size of buffer needed
             this.BufferSize = Marshal.SizeOf(typeof(T)) * Data.Length;
@@ -53,14 +53,20 @@ namespace Quirk.Graphics.LibOpenTK
         /// Creates a blank UniformBuffer of a given size.
         /// </summary>
         /// <param name="BufferSize">The size of the buffer in bytes</param>
-        public UniformBuffer(int BufferSize)
+        public UniformBuffer(int BufferSize, int BindingIndex)
         {
             this.GenerateBuffer();
+            this.BindingIndex = BindingIndex;
 
             GL.BindBuffer(BufferTarget.UniformBuffer, Reference);
             GL.BufferData(BufferTarget.UniformBuffer, new IntPtr(BufferSize), IntPtr.Zero, BufferUsageHint.DynamicDraw);
         }
 
+        ~UniformBuffer()
+        {
+            this.Destroy();
+        }
+        
         /// <summary>
         /// Immediately deletes and invalidates this vertex buffer.
         /// </summary>
@@ -135,10 +141,6 @@ namespace Quirk.Graphics.LibOpenTK
 
             if (GL.GetError() != ErrorCode.NoError)
                 throw new QuirkGraphicsException("Failed to generate UBO!");
-
-            // Todo: This should be validated, and controlled by the graphics context - rather than the UBO class itself.
-            BindingIndex = IncrementalBindingIndex;
-            IncrementalBindingIndex++;
         }
     }
 }

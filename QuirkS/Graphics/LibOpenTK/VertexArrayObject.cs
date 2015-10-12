@@ -17,6 +17,11 @@ namespace Quirk.Graphics.LibOpenTK
             Reference = GL.GenVertexArray();
         }
 
+        ~VertexArrayObject()
+        {
+            this.Destroy();
+        }
+
         public void Bind()
         {
             GL.BindVertexArray(Reference);

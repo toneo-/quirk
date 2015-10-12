@@ -18,6 +18,11 @@ namespace Quirk.Graphics.Shaders.LibOpenTK
             this.CompileAndLoad(ShaderSource);
         }
 
+        ~FragmentShader()
+        {
+            this.Destroy();
+        }
+
         public QuirkShaderType GetShaderType()
         {
             return QuirkShaderType.FragmentShader;

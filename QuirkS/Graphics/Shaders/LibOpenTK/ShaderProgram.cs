@@ -26,6 +26,11 @@ namespace Quirk.Graphics.Shaders.LibOpenTK
                 throw new QuirkGraphicsException("Failed to generate shader program! " + error.ToString());
         }
 
+        ~ShaderProgram()
+        {
+            this.Destroy();
+        }
+
         public void Link()
         {
             GL.LinkProgram(Reference);

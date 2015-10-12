@@ -39,6 +39,11 @@ namespace Quirk.Graphics
         /// <returns>The created index buffer.</returns>
         IIndexBuffer<T> CreateIndexBuffer<T>(T[] Indices) where T : struct;
 
+        // Todo: Document
+        IUniformBuffer<T> CreateUniformBuffer<T>(T Data) where T : struct;
+        IUniformBuffer<T> CreateUniformBuffer<T>(T[] Data) where T : struct;
+        IUniformBuffer<T> CreateUniformBuffer<T>(int Size) where T : struct;
+
         /// <summary>
         /// Draws triangles using the currently bound vertex and index buffers.
         /// <b>Indices are assumed to be unsigned integers.</b>

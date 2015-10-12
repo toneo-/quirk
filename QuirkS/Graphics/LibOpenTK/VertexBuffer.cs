@@ -46,6 +46,11 @@ namespace Quirk.Graphics.LibOpenTK
             GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(BufferSize), IntPtr.Zero, (BufferUsageHint)Usage);
         }
 
+        ~VertexBuffer()
+        {
+            this.Destroy();
+        }
+
         /// <summary>
         /// Immediately deletes and invalidates this vertex buffer.
         /// </summary>
