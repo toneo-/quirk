@@ -4,29 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using OpenTK.Graphics.OpenGL;
-
-namespace Quirk.Graphics.LibOpenTK
+namespace Quirk.Graphics
 {
     public class TriangleMesh<T> : IMesh<T> where T : struct
     {
-        private VertexBuffer<T> VXBuffer;
-        private IndexBuffer<int> IXBuffer;
+        private ILibraryContext Context;
+
+        private IVertexBuffer<T> VXBuffer;
+        private IIndexBuffer<int> IXBuffer;
         private int IndexCount;
 
         private bool Initialised = false;
 
-        public TriangleMesh()
+        public TriangleMesh(ILibraryContext Context)
         {
+            this.Context = Context;
             Initialised = false;
         }
 
-        public TriangleMesh(T[] Vertices, int[] Indices)
+        public TriangleMesh(ILibraryContext Context, T[] Vertices, int[] Indices)
         {
-            VXBuffer = new VertexBuffer<T>(Vertices);
-            IXBuffer = new IndexBuffer<int>(Indices);
+            this.Context = Context;
+            this.SetVertices(Vertices, Indices);
 
-            IndexCount = Indices.Length;
             Initialised = true;
         }
 
@@ -56,8 +56,8 @@ namespace Quirk.Graphics.LibOpenTK
             if (Initialised)
                 throw new InvalidOperationException("Mesh has already been initialised.");
 
-            VXBuffer = new VertexBuffer<T>(Vertices);
-            IXBuffer = new IndexBuffer<int>(Indices);
+            VXBuffer = Context.CreateVertexBuffer<T>(Vertices);
+            IXBuffer = Context.CreateIndexBuffer<int>(Indices);
 
             IndexCount = Indices.Length;
         }
@@ -67,9 +67,7 @@ namespace Quirk.Graphics.LibOpenTK
             if (!Initialised)
                 throw new InvalidOperationException("Mesh has not been initialised.");
             
-            //GL.DrawArrays(PrimitiveType.Lines, 0, IndexCount);
-            //GL.DrawElements(BeginMode.Triangles, IndexCount, DrawElementsType.UnsignedInt, IntPtr.Zero);
-            GL.DrawElements(PrimitiveType.Triangles, IndexCount, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            Context.DrawTriangles(0, IndexCount);
         }
     }
 }

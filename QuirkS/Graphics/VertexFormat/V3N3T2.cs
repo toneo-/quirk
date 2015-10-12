@@ -36,5 +36,16 @@ namespace Quirk.Graphics.VertexFormat
             // Only using 3 of our floats.
             return (Position.X + Normal.X + UV.X).GetHashCode();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is V3N3T2)) return false;
+            return Equals((V3N3T2)obj);
+        }
+
+        public bool Equals(V3N3T2 Other)
+        {
+            return (Position == Other.Position) && (Normal == Other.Normal) && (UV == Other.UV);
+        }
     }
 }

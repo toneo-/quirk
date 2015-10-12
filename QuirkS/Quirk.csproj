@@ -50,10 +50,13 @@
     <Compile Include="Graphics\Angle.cs" />
     <Compile Include="Graphics\BufferUsage.cs" />
     <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\ILibraryContext.cs" />
+    <Compile Include="Graphics\ITexture.cs" />
     <Compile Include="Graphics\IUniformBuffer.cs" />
     <Compile Include="Graphics\IMesh.cs" />
+    <Compile Include="Graphics\LibOpenTK\OpenTKLibraryContext.cs" />
     <Compile Include="Graphics\LibOpenTK\UniformBuffer.cs" />
-    <Compile Include="Graphics\LibOpenTK\TriangleMesh.cs" />
+    <Compile Include="Graphics\TriangleMesh.cs" />
     <Compile Include="Graphics\Loaders\OBJLoader.cs" />
     <Compile Include="Graphics\QuirkShaderCompilationException.cs" />
     <Compile Include="Graphics\IGenericBuffer.cs" />
@@ -80,6 +83,7 @@
     <Compile Include="Graphics\IRenderer.cs" />
     <Compile Include="Graphics\LibOpenTK\RendererTK.cs" />
     <Compile Include="ShaderLinkAttribute.cs" />
+    <Compile Include="Utility\Profiler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

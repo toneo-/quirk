@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quirk.Graphics
 {
-    interface IGenericBuffer
+    public interface IGenericBuffer
     {
         void Bind();
         void Unbind();

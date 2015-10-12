@@ -91,5 +91,10 @@ namespace Quirk.Graphics
 
             return rightVec;
         }
+
+        public Vector3 Up()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

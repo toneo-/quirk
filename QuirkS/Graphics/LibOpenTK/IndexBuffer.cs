@@ -79,18 +79,6 @@ namespace Quirk.Graphics.LibOpenTK
             GL.BufferSubData(BufferTarget.ElementArrayBuffer, IntPtr.Zero, new IntPtr(Size), Data);
         }
 
-        public void WriteData(T Data)
-        {
-            int dataSize = Marshal.SizeOf(typeof(T));
-
-            // Sanity check
-            if (dataSize > this.BufferSize)
-                throw new QuirkGraphicsException("Data size exceeds buffer size!");
-
-            // Load the data into the buffer
-            GL.BufferSubData<T>(BufferTarget.ElementArrayBuffer, IntPtr.Zero, new IntPtr(dataSize), ref Data);
-        }
-
         public void WriteData(T[] Data)
         {
             int dataSize = Marshal.SizeOf(typeof(T)) * Data.Length;

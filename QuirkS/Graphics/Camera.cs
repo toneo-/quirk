@@ -35,7 +35,7 @@ namespace Quirk.Graphics
         /// <summary>
         /// Unit vector representing which way is 'up'. By default, this is Z (0, 0, 1).
         /// </summary>
-        public Vector3 Up = new Vector3(0.0f, 0.0f, 1.0f);
+        public Vector3 UpVector = new Vector3(0.0f, 0.0f, 1.0f);
 
         /// <summary>
         /// Gets the Perspective Matrix needed to transform vertices.
@@ -55,7 +55,7 @@ namespace Quirk.Graphics
             Vector3 falseTarget = Position + (direction * distance);
 
             // Rotate "up" vector by the camera's roll angle.
-            Vector3 rotatedUp = Vector3.TransformVector(Up, Matrix4.CreateRotationY(Angles.RollRads));
+            Vector3 rotatedUp = Vector3.TransformVector(UpVector, Matrix4.CreateRotationY(Angles.RollRads));
 
             PerspectiveMatrix = Matrix4.LookAt(Position, falseTarget, rotatedUp);
             WorldMatrix = Matrix4.Translation(-Position);

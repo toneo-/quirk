@@ -16,6 +16,8 @@ using Quirk.Graphics.Shaders.LibOpenTK;
 using Quirk.Graphics.VertexFormat;
 using Quirk.Graphics.Loaders;
 
+using Quirk.Utility;
+
 namespace Quirk
 {
     [Serializable]
@@ -46,6 +48,8 @@ namespace Quirk
         static IGenericBuffer vBuffer, iBuffer;
         static IMesh<V3N3> Mesh;
 
+        static ILibraryContext Context;
+
         static void Main(string[] args)
         {
             using (var window = new GameWindow(800, 600))
@@ -55,29 +59,34 @@ namespace Quirk
                 window.UpdateFrame += window_UpdateFrame;
                 window.RenderFrame += window_RenderFrame;
                 window.VSync = VSyncMode.Off;
-
+                
                 V3N3T2[] rawVertices;
                 V3N3[] vboData;
                 int[] iboData;
 
-                //OBJLoader.LoadFromStream(File.OpenRead(@"C:\Users\Toneo\Projects\C#\QuirkS\suzanne.obj"), out rawVertices, out iboData);
-                //OBJLoader.LoadV3N3Stream(File.OpenRead(@"E:\suzanne.obj"), out vboData, out iboData, true);
+                OBJLoader loader = new OBJLoader(false);
 
-                OBJLoader loader = new OBJLoader(true);
-                loader.LoadFromStream(File.OpenRead(@"E:\suzanne.obj"), out rawVertices, out iboData);
+                Context = new OpenTKLibraryContext();
+
+                Profiler.Start("model");
+                    loader.LoadFromStream(File.OpenRead(@"E:\test_ufo.obj"), out rawVertices, out iboData);
+                Console.WriteLine("Loading model took " + Profiler.End("model") + " seconds");
 
                 // Convert to V3N3
-                vboData = new V3N3[rawVertices.Length];
-
-                for (int i = 0; i < rawVertices.Length; i++)
-                    vboData[i] = new V3N3(rawVertices[i].Position, rawVertices[i].Normal);
+                Profiler.Start("convertToV3N3");
+                    vboData = new V3N3[rawVertices.Length];
+                
+                    for (int i = 0; i < rawVertices.Length; i++)
+                        vboData[i] = new V3N3(rawVertices[i].Position, rawVertices[i].Normal);
+                Console.WriteLine("Converting to V3N3 took " + Profiler.End("convertToV3N3") + " seconds");
+                // do some scaling here etc etc
 
                 // Generate Mesh
-                Mesh = new TriangleMesh<V3N3>(vboData, iboData);
+                Mesh = new TriangleMesh<V3N3>(Context, vboData, iboData);
 
                 window.Closing += window_Closing;
 
-                window.Run(200, 60);
+                window.Run(60, 60);
             }
         }
 
@@ -98,7 +107,7 @@ namespace Quirk
 
         static Camera cam = new Camera();
 
-        static terribleLight[] lights = new terribleLight[10];
+        static terribleLight[] lights = new terribleLight[3];
 
         static void window_RenderFrame(object sender, FrameEventArgs e)
         {
@@ -111,6 +120,7 @@ namespace Quirk
             {
                 first = false;
 
+                
                 vertexSh = new VertexShader(File.ReadAllText("Resources/Shaders/Test/test_vert_V3N3.glsl"));
                 fragSh = new FragmentShader(File.ReadAllText("Resources/Shaders/Test/test_frag_V3N3.glsl"));
 
@@ -118,15 +128,15 @@ namespace Quirk
                 shProg.Attach(vertexSh);
                 shProg.Attach(fragSh);
 
-                lights[0].Direction = new Vector3(0, 0.0f, 1.0f);
-                lights[0].Position = new Vector3(0, 0.0f, -10.0f);
-                lights[0].Color = new Vector3(1.0f, 0.5f, 0.0f);
-                lights[0].Range = 1000.0f;
+                lights[0].Direction = new Vector3(1.0f, 0.0f, 0.0f);
+                lights[0].Position = new Vector3(-250.0f, 0.0f, 0.0f);
+                lights[0].Color = new Vector3(0.0f, 0.5f, 1.0f);
+                lights[0].Range = 500.0f;
 
-                lights[1].Direction = new Vector3(0.0f, 0.0f, -5.0f);
-                lights[1].Position = new Vector3(0, 0.0f, 5.0f);
-                lights[1].Color = new Vector3(0.0f, 0.5f, 1.0f);
-                lights[1].Range = 15.0f;
+                lights[1].Direction = new Vector3(0.0f, 0.0f, -1.0f);
+                lights[1].Position = new Vector3(0, 0.0f, 250.0f);
+                lights[1].Color = new Vector3(1.0f, 0.5f, 0.0f);
+                lights[1].Range = 500.0f;
 
                 ubo = new UniformBuffer<terribleLight>(lights);
 
@@ -171,22 +181,21 @@ namespace Quirk
 
             // "DO YOU HAVE EPILEPSY?" mode
             //Random r = new Random();
-            //terribleLight t1 = new terribleLight();
-            //t1.Direction.X = (float)(r.NextDouble() * 1.0f);
-            //t1.Direction.Y = (float)(r.NextDouble() * 1.0f);
-            //t1.Direction.Z = (float)(r.NextDouble() * 1.0f);
-            //t1.Direction.Normalize();
+            terribleLight t0 = new terribleLight();
+            t0.Direction = (cam.Angles.Forward());
+            //t0.Direction.Normalize();
 
+            t0.Position = cam.Position;
             //t1.Position.X = (float)(r.NextDouble() * 1.0f);
             //t1.Position.Y = (float)(r.NextDouble() * 1.0f);
             //t1.Position.Z = (float)(r.NextDouble() * 1.0f);
             //t1.Position = (t1.Position.Normalized() * 20.0f);
-            //t1.Range = 150.0f;
-            //t1.Color = new Vector3(1.0f, 1.0f, 1.0f);
+            t0.Range = 350.0f;
+            t0.Color = new Vector3(1.0f, 1.0f, 1.0f);
 
-            //ubo.WriteData(t1);
+            ubo.WriteData(t0);//, 2);
 
-            shProg.SetUniform("LightCount", 5);
+            shProg.SetUniform("LightCount", 3);
 
             GL.PointSize(15.0f);
 
@@ -232,6 +241,13 @@ namespace Quirk
 
             if (g.Keyboard[Key.Right])
                 cam.Position = Vector3.Add(cam.Position, cam.Angles.Right());
+
+
+            if (g.Keyboard[Key.Space])
+                cam.Position = Vector3.Add(cam.Position, cam.UpVector * 0.5f);
+
+            if (g.Keyboard[Key.ShiftLeft])
+                cam.Position = Vector3.Add(cam.Position, cam.UpVector * -0.5f);
 
 
             if (g.Keyboard[Key.Q])
