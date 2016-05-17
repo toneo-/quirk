@@ -51,11 +51,14 @@
     <Compile Include="Graphics\BufferUsage.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\ILibraryContext.cs" />
+    <Compile Include="Graphics\IModel.cs" />
     <Compile Include="Graphics\ITexture.cs" />
     <Compile Include="Graphics\IUniformBuffer.cs" />
     <Compile Include="Graphics\IMesh.cs" />
     <Compile Include="Graphics\LibOpenTK\OpenTKLibraryContext.cs" />
     <Compile Include="Graphics\LibOpenTK\UniformBuffer.cs" />
+    <Compile Include="Graphics\LibOpenTK\Texture2D.cs" />
+    <Compile Include="Graphics\ShadedModel.cs" />
     <Compile Include="Graphics\TriangleMesh.cs" />
     <Compile Include="Graphics\Loaders\OBJLoader.cs" />
     <Compile Include="Graphics\QuirkShaderCompilationException.cs" />
@@ -83,10 +86,20 @@
     <Compile Include="Graphics\IRenderer.cs" />
     <Compile Include="Graphics\LibOpenTK\RendererTK.cs" />
     <Compile Include="ShaderLinkAttribute.cs" />
+    <Compile Include="Testing.cs" />
     <Compile Include="Utility\Profiler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Resources\Shaders\Test\test_vert_V3N3T2.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Shaders\Test\test_frag_V3N3T2.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Shaders\Test\test_frag_V3N3_normals.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Shaders\Test\test_frag_V3N3.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

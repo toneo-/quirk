@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quirk.Graphics.Shaders
 {
-    interface IShader
+    public interface IShader
     {
         QuirkShaderType GetShaderType();
 

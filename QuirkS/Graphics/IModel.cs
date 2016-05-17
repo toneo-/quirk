@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace Quirk.Graphics
 {
-    public interface IMesh
+    public interface IModel
     {
-        void Bind();
-        void Unbind();
-        void Destroy();
-
-        void Draw();
+        void Draw(ILibraryContext Context);
     }
 }

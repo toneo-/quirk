@@ -14,7 +14,7 @@ namespace Quirk.Graphics.LibOpenTK
     /// </summary>
     public class OpenTKLibraryContext : ILibraryContext
     {
-        // Todo: Binding indices may be freed up later on
+        // Todo: Upgrade this method of generating uniform binding IDs so we can reuse old IDs
         private int UniformBindingCount = 0;
 
         /// <summary>

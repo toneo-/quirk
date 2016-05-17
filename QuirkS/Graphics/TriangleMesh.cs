@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quirk.Graphics
 {
-    public class TriangleMesh<T> : IMesh<T> where T : struct
+    public class TriangleMesh<T> : IMesh where T : struct
     {
         private ILibraryContext Context;
 

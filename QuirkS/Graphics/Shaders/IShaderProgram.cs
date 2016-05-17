@@ -9,7 +9,7 @@ using Quirk.Graphics.VertexFormat;
 
 namespace Quirk.Graphics.Shaders
 {
-    interface IShaderProgram
+    public interface IShaderProgram
     {
         void Link();
         void Unlink();

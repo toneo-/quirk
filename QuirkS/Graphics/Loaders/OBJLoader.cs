@@ -86,8 +86,10 @@ namespace Quirk.Graphics.Loaders
             for (int faceID = 0; faceID < FaceDefinitions.Count; faceID++)
             {
                 string[] faceDefinition = FaceDefinitions[faceID];
-                
-                if (faceDefinition.Length != 3 && faceDefinition.Length != 4)
+
+                int NumVerts = faceDefinition.Length;
+
+                if (NumVerts != 3 && NumVerts != 4)
                     throw new InvalidDataException("Face definition must contain either 3 or 4 vertices.");
 
                 // For each vertex in the face
@@ -122,6 +124,13 @@ namespace Quirk.Graphics.Loaders
                         ((normalIndex == -1) ? Vector3.Zero : Normals[normalIndex - 1]), 
                         ((UVIndex == -1) ? Vector2.Zero : UV[UVIndex - 1])
                         );
+
+                    // If we're using quads, add the previous two vertices before adding this one
+                    if (vertexNo == 3)
+                    {
+                        indices.Add(indices[indices.Count - 3]);
+                        indices.Add(indices[indices.Count - 2]);
+                    }
 
                     // If the vertex already exists, reference it
                     if (existingVertices.ContainsKey(Vertex))
@@ -187,8 +196,10 @@ namespace Quirk.Graphics.Loaders
                     // Quad
                     else if (lineParts.Length == 5)
                         FaceDefinitions.Add(new string[] { lineParts[1], lineParts[2], lineParts[3], lineParts[4] });
-                    else
+                    else if (lineParts.Length < 4)
                         throw new InvalidDataException("Failed to read face definition; Must define a triangle or quad");
+                    else
+                        throw new InvalidDataException("Unsupported face definition; appears to be a multi-point curve");
 
                     break;
 

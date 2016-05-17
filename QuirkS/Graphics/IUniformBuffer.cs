@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quirk.Graphics
 {
-    interface IUniformBuffer<T> : IGenericBuffer where T : struct
+    public interface IUniformBuffer<T> : IGenericBuffer where T : struct
     {
         int GetBindingIndex();
 

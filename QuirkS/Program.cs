@@ -40,49 +40,46 @@ namespace Quirk
     //    float Range;
     //};
 
-    class Program
+    partial class Program
     {
         // Todo: Separate the window stuff out (it's OpenTK specific)
         
         static IRenderer ActiveRenderer = new RendererTK();
         static IGenericBuffer vBuffer, iBuffer;
-        static IMesh<V3N3> Mesh;
+        static IMesh Mesh;
 
         static ILibraryContext Context;
 
+        static Texture2D tex1;
+
         static void Main(string[] args)
         {
-            using (var window = new GameWindow(800, 600))
+            using (var window = new GameWindow(800, 600, GraphicsMode.Default, "Quirk#", GameWindowFlags.FixedWindow, DisplayDevice.Default))
             {
                 window.Load += window_Load;
                 window.Resize += window_Resize;
                 window.UpdateFrame += window_UpdateFrame;
                 window.RenderFrame += window_RenderFrame;
                 window.VSync = VSyncMode.Off;
-                
+
                 V3N3T2[] rawVertices;
-                V3N3[] vboData;
                 int[] iboData;
 
-                OBJLoader loader = new OBJLoader(false);
+                OBJLoader loader = new OBJLoader(true);
 
                 Context = new OpenTKLibraryContext();
 
                 Profiler.Start("model");
-                    loader.LoadFromStream(File.OpenRead(@"E:\test_ufo.obj"), out rawVertices, out iboData);
+                loader.LoadFromStream(File.OpenRead(@"E:\Projects\Data\Models\CylonRaider.obj"), out rawVertices, out iboData);
                 Console.WriteLine("Loading model took " + Profiler.End("model") + " seconds");
-
-                // Convert to V3N3
-                Profiler.Start("convertToV3N3");
-                    vboData = new V3N3[rawVertices.Length];
                 
-                    for (int i = 0; i < rawVertices.Length; i++)
-                        vboData[i] = new V3N3(rawVertices[i].Position, rawVertices[i].Normal);
-                Console.WriteLine("Converting to V3N3 took " + Profiler.End("convertToV3N3") + " seconds");
-                // do some scaling here etc etc
+                Profiler.Start("loadTexture");
+                Bitmap b = (Bitmap)Bitmap.FromFile(@"E:\Projects\Data\Models\CylonRaider.jpg");
+                tex1 = new Texture2D(b);
+                Console.WriteLine("Loading texture took " + Profiler.End("loadTexture") + " seconds");
 
                 // Generate Mesh
-                Mesh = new TriangleMesh<V3N3>(Context, vboData, iboData);
+                Mesh = new TriangleMesh<V3N3T2>(Context, rawVertices, iboData);
 
                 window.Closing += window_Closing;
 
@@ -119,10 +116,10 @@ namespace Quirk
             if (first)
             {
                 first = false;
+                SetupTest();
 
-                
-                vertexSh = new VertexShader(File.ReadAllText("Resources/Shaders/Test/test_vert_V3N3.glsl"));
-                fragSh = new FragmentShader(File.ReadAllText("Resources/Shaders/Test/test_frag_V3N3.glsl"));
+                vertexSh = new VertexShader(File.ReadAllText("Resources/Shaders/Test/test_vert_V3N3T2.glsl"));
+                fragSh = new FragmentShader(File.ReadAllText("Resources/Shaders/Test/test_frag_V3N3T2.glsl"));
 
                 shProg = new ShaderProgram();
                 shProg.Attach(vertexSh);
@@ -138,27 +135,22 @@ namespace Quirk
                 lights[1].Color = new Vector3(1.0f, 0.5f, 0.0f);
                 lights[1].Range = 500.0f;
 
-                ubo = Context.CreateUniformBuffer<terribleLight>(lights); //new UniformBuffer<terribleLight>(lights);
-
-             //Vector3 Direction = new Vector3(0, 0.0f, 1.0f);
-            //Vector3 Position = new Vector3(0, 0.0f, -10.0f);
-            //Vector3 Clor = new Vector3(1.0f, 0.5f, 0.0f);
-            //shProg.SetUniform("Lights[0].Direction", ref Direction);
-            ////shProg.SetUniform("Lights[0].Position", ref Position);
-            //shProg.SetUniform("Lights[0].Color", ref Clor);
-            //shProg.SetUniform("Lights[0].Range", Range);
+                ubo = Context.CreateUniformBuffer(lights); //new UniformBuffer<terribleLight>(lights);
 
                 vao = new VertexArrayObject();
                 vao.Bind();
 
                 GL.Enable(EnableCap.DepthTest);
+                GL.Enable(EnableCap.Texture2D);
 
                 Mesh.Bind();
                 ubo.Bind();
 
-                shProg.SetupFormat(typeof(V3N3));
+                shProg.SetupFormat(typeof(V3N3T2));
                 shProg.Use();
                 shProg.BindUniformBlock("BlockyBlock", ubo);
+
+                tex1.Bind();
 
                 vao.Unbind();
 
@@ -167,6 +159,8 @@ namespace Quirk
             }
 
             ActiveRenderer.Clear(Color.CornflowerBlue);
+
+            RenderTest();
 
             vao.Bind();
 
@@ -196,6 +190,7 @@ namespace Quirk
             ubo.WriteData(t0);//, 2);
 
             shProg.SetUniform("LightCount", 3);
+            shProg.SetUniform("tex1", (int)(TextureUnit.Texture1 - TextureUnit.Texture0)); ///ewwwww
 
             GL.PointSize(15.0f);
 
