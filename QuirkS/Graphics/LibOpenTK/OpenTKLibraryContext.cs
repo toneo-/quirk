@@ -67,6 +67,13 @@ namespace Quirk.Graphics.LibOpenTK
             return new LibOpenTK.UniformBuffer<T>(Data, this.NextUniformBindingIndex());
         }
 
+        // VAO
+
+        public IVertexArrayObject CreateVertexArrayObject()
+        {
+            return new VertexArrayObject();
+        }
+
         // ** Drawing **
 
         public void DrawTriangles(int Offset, int Count)

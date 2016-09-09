@@ -44,6 +44,9 @@ namespace Quirk.Graphics
         IUniformBuffer<T> CreateUniformBuffer<T>(T[] Data) where T : struct;
         IUniformBuffer<T> CreateUniformBuffer<T>(int Size) where T : struct;
 
+        // Also todo: document
+        IVertexArrayObject CreateVertexArrayObject();
+
         /// <summary>
         /// Draws triangles using the currently bound vertex and index buffers.
         /// <b>Indices are assumed to be unsigned integers.</b>

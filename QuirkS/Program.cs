@@ -43,14 +43,6 @@ namespace Quirk
     partial class Program
     {
         // Todo: Separate the window stuff out (it's OpenTK specific)
-        
-        static IRenderer ActiveRenderer = new RendererTK();
-        static IGenericBuffer vBuffer, iBuffer;
-        static IMesh Mesh;
-
-        static ILibraryContext Context;
-
-        static Texture2D tex1;
 
         static void Main(string[] args)
         {
@@ -62,26 +54,13 @@ namespace Quirk
                 window.RenderFrame += window_RenderFrame;
                 window.VSync = VSyncMode.Off;
 
-                V3N3T2[] rawVertices;
-                int[] iboData;
-
-                OBJLoader loader = new OBJLoader(true);
-
-                Context = new OpenTKLibraryContext();
-
-                Profiler.Start("model");
-                loader.LoadFromStream(File.OpenRead(@"E:\Projects\Data\Models\CylonRaider.obj"), out rawVertices, out iboData);
-                Console.WriteLine("Loading model took " + Profiler.End("model") + " seconds");
-                
-                Profiler.Start("loadTexture");
-                Bitmap b = (Bitmap)Bitmap.FromFile(@"E:\Projects\Data\Models\CylonRaider.jpg");
-                tex1 = new Texture2D(b);
-                Console.WriteLine("Loading texture took " + Profiler.End("loadTexture") + " seconds");
-
-                // Generate Mesh
-                Mesh = new TriangleMesh<V3N3T2>(Context, rawVertices, iboData);
-
                 window.Closing += window_Closing;
+
+                // Initial setup (pre-rendering)
+                SetupTest();
+
+                cam.Position = new Vector3(0, -5.0f, 0);
+                cam.Angles = new Angle(0, 0, 0);
 
                 window.Run(60, 60);
             }
@@ -89,22 +68,9 @@ namespace Quirk
 
         static void window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            vBuffer.Destroy();
-            iBuffer.Destroy();
         }
 
-        static bool first = true;
-        static IVertexArrayObject vao;
-        static IShader fragSh, vertexSh;
-        static IShaderProgram shProg;
-        static float shift1 = 0.0f;
-        static float shift2 = -5.0f;
-
-        static IUniformBuffer<terribleLight> ubo;
-
         static Camera cam = new Camera();
-
-        static terribleLight[] lights = new terribleLight[3];
 
         static void window_RenderFrame(object sender, FrameEventArgs e)
         {
@@ -113,91 +79,7 @@ namespace Quirk
             double fps = g.RenderFrequency;
             Console.WriteLine("FPS: " + fps);
 
-            if (first)
-            {
-                first = false;
-                SetupTest();
-
-                vertexSh = new VertexShader(File.ReadAllText("Resources/Shaders/Test/test_vert_V3N3T2.glsl"));
-                fragSh = new FragmentShader(File.ReadAllText("Resources/Shaders/Test/test_frag_V3N3T2.glsl"));
-
-                shProg = new ShaderProgram();
-                shProg.Attach(vertexSh);
-                shProg.Attach(fragSh);
-
-                lights[0].Direction = new Vector3(1.0f, 0.0f, 0.0f);
-                lights[0].Position = new Vector3(-250.0f, 0.0f, 0.0f);
-                lights[0].Color = new Vector3(0.0f, 0.5f, 1.0f);
-                lights[0].Range = 500.0f;
-
-                lights[1].Direction = new Vector3(0.0f, 0.0f, -1.0f);
-                lights[1].Position = new Vector3(0, 0.0f, 250.0f);
-                lights[1].Color = new Vector3(1.0f, 0.5f, 0.0f);
-                lights[1].Range = 500.0f;
-
-                ubo = Context.CreateUniformBuffer(lights); //new UniformBuffer<terribleLight>(lights);
-
-                vao = new VertexArrayObject();
-                vao.Bind();
-
-                GL.Enable(EnableCap.DepthTest);
-                GL.Enable(EnableCap.Texture2D);
-
-                Mesh.Bind();
-                ubo.Bind();
-
-                shProg.SetupFormat(typeof(V3N3T2));
-                shProg.Use();
-                shProg.BindUniformBlock("BlockyBlock", ubo);
-
-                tex1.Bind();
-
-                vao.Unbind();
-
-                cam.Position = new Vector3(0, -5.0f, 0);
-                cam.Angles = new Angle(0, 0, 0);
-            }
-
-            ActiveRenderer.Clear(Color.CornflowerBlue);
-
             RenderTest();
-
-            vao.Bind();
-
-
-            Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver2, (float)(16 / 9), 1, 1024);
-            Matrix4 view = cam.PerspectiveMatrix;// Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 0, 1);
-            Matrix4 model = Matrix4.CreateTranslation(new Vector3(0, 0, 0));
-            Matrix4 MVP = model * view * projection;
-
-            shProg.SetUniform("ModelViewProjection", ref MVP);
-            shProg.SetUniform("Model", ref model);
-
-            // "DO YOU HAVE EPILEPSY?" mode
-            //Random r = new Random();
-            terribleLight t0 = new terribleLight();
-            t0.Direction = (cam.Angles.Forward());
-            //t0.Direction.Normalize();
-
-            t0.Position = cam.Position;
-            //t1.Position.X = (float)(r.NextDouble() * 1.0f);
-            //t1.Position.Y = (float)(r.NextDouble() * 1.0f);
-            //t1.Position.Z = (float)(r.NextDouble() * 1.0f);
-            //t1.Position = (t1.Position.Normalized() * 20.0f);
-            t0.Range = 350.0f;
-            t0.Color = new Vector3(1.0f, 1.0f, 1.0f);
-
-            ubo.WriteData(t0);//, 2);
-
-            shProg.SetUniform("LightCount", 3);
-            shProg.SetUniform("tex1", (int)(TextureUnit.Texture1 - TextureUnit.Texture0)); ///ewwwww
-
-            GL.PointSize(15.0f);
-
-            Mesh.Draw();
-
-            vao.Unbind();
-            g.SwapBuffers();
         }
 
         static void window_Load(object sender, EventArgs e)

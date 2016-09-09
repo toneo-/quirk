@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quirk.Graphics
 {
-    interface IVertexArrayObject
+    public interface IVertexArrayObject
     {
         void Bind();
         void Unbind();

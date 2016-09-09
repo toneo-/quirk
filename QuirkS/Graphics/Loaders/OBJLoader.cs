@@ -20,14 +20,32 @@ namespace Quirk.Graphics.Loaders
             this.SwapYZ = SwapYZ;
         }
         
-
-        public void LoadFromStream(Stream DataStream, out V3N3T2[] Vertices, out int[] Indices)
+        /// <summary>
+        /// Returns raw mesh data loaded from a given stream.
+        /// </summary>
+        /// <param name="DataStream"></param>
+        /// <param name="Vertices"></param>
+        /// <param name="Indices"></param>
+        public void LoadRawDataFromStream(Stream DataStream, out V3N3T2[] Vertices, out int[] Indices)
         {
             string[] Lines = GetAllLines(DataStream);
             this.LoadVINUV(Lines, out Vertices, out Indices);
+        }
 
-            DataStream.Dispose();
-            DataStream.Close();
+        /// <summary>
+        /// Returns a new mesh loaded from a given stream.
+        /// </summary>
+        /// <param name="LibraryContext"></param>
+        /// <param name="DataStream"></param>
+        /// <returns></returns>
+        public IMesh LoadMeshFromStream(ILibraryContext LibraryContext, Stream DataStream)
+        {
+            V3N3T2[] Vertices;
+            int[] Indices;
+
+            this.LoadRawDataFromStream(DataStream, out Vertices, out Indices);
+
+            return new TriangleMesh<V3N3T2>(LibraryContext, Vertices, Indices);
         }
 
         private string[] GetAllLines(Stream DataStream)
